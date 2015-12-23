@@ -1,6 +1,6 @@
 package net.victory.engine.world;
 
-import net.victory.engine.Tangible;
+import net.victory.engine.GUI;
 import net.victory.engine.Window;
 import net.victory.engine.Menu;
 import net.victory.engine.battle.BattleScene;
@@ -13,7 +13,7 @@ import net.victory.engine.input.KeyStateManager;
  * @author Victoria Lacroix
  * 
  */
-public class MapEngine implements Tangible{
+public class MapEngine implements GUI{
     
     public final int    TILE_WIDTH, TILE_HEIGHT;
     public final int    SCREEN_WIDTH, SCREEN_HEIGHT;
@@ -174,21 +174,16 @@ public class MapEngine implements Tangible{
             loadedMap.animate();
         }
     }
-    
+
     /**
      * Update velocities for the entity in control.
      * @param buttonManager where to buttons from
      */
     public int control(KeyStateManager buttonManager){
-        int result = -1;
-        if(director != null) result = director.control(buttonManager);
-        switch(result){
-            case -1: break;
-            case 1: Window win = new Window(0, 0, 40, 4); win.queue("Test String."); ;
-        }
-        return -1;
+        director.control(buttonManager);
+        return 0;
     }
-    
+
     /**
      * Handles the collision of all entities within eachother.
      */
@@ -208,17 +203,17 @@ public class MapEngine implements Tangible{
             }
         }
     }
-    
+
     @Override
     public void draw(int sx, int sy, Screen s){
         loadedMap.draw(-camX, -camY, s);
         for(int i = 0; i < manyEntities; i++){
             entities[i].draw((int)entities[i].getX() - camX, (int)entities[i].getY() - camY, s);
         }
-        
+
         // Draw our director if they are an instance of ScreenController.
-        if(!(director instanceof Entity) && director instanceof Tangible){
-            ((Tangible)director).draw(0,0,s);
+        if(!(director instanceof Entity) && director instanceof GUI){
+            ((GUI)director).draw(0,0,s);
         }
     }
 }

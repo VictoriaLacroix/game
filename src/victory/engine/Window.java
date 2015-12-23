@@ -6,8 +6,7 @@ import net.victory.engine.graphics.SpriteSheet;
 import net.victory.engine.input.KeyStateManager;
 import net.victory.engine.input.KeyStateManager.Button;
 
-
-public class Window implements Tangible{
+public class Window implements GUI{
     private int x, y;
     private int width, height;
     /**

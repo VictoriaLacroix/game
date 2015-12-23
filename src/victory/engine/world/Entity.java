@@ -1,8 +1,8 @@
 package net.victory.engine.world;
 
 import net.victory.engine.Core;
-import net.victory.engine.BaseEngine;
-import net.victory.engine.Tangible;
+import net.victory.engine.GUIEngine;
+import net.victory.engine.GUI;
 import net.victory.engine.Menu;
 import net.victory.engine.Window;
 import net.victory.engine.graphics.Screen;
@@ -107,28 +107,27 @@ public abstract class Entity{
         }
         
         if(input.wasButtonPressed(Button.START)){
-            Window w = new Window(0, 0, 40, 6);
-            w.queue("This is text on a window. When it gets really fucking hot, it'll shut off before any damage is done. Probably.");
-            BaseEngine.focusTangible(w);
+            GUIEngine.addGUI(new Menu(0, 0, "Exit Menu", "Quit to Desktop"));
         }
-        return -1;
+
+        return 0;
     }
-    
+
     /**
      * Collision detection/reaction method for tilemaps/collisionmaps.
-     * 
+     *
      * @param cmap
      *            CollisionMap to correspond to.
      */
     public void checkCollision(CollisionMap cmap){
         /*
          * Okay kid, this is where things get complicated.
-         * 
+         *
          * First of all, we have to use the x,y values for the next frame to
          * determine what the hell is going on, otherwise we'll get weird
          * "snapping" when an entity is consistently trying to move in a direction
          * (eg gravity).
-         * 
+         *
          * Next up, we manipulate WHERE the collision points on each side are
          * (an if statement represents one side). The result is an octagon shape
          * for the collision hitbox. The reasoning behind this is that a 4-point
