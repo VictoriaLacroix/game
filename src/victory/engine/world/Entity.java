@@ -1,8 +1,8 @@
 package net.victory.engine.world;
 
 import net.victory.engine.Core;
-import net.victory.engine.BaseEngine;
-import net.victory.engine.Tangible;
+import net.victory.engine.GUIEngine;
+import net.victory.engine.GUI;
 import net.victory.engine.Menu;
 import net.victory.engine.Window;
 import net.victory.engine.graphics.Screen;
@@ -13,48 +13,48 @@ import net.victory.engine.input.KeyStateManager.Button;
 
 /**
  * An abstract class to describe an entity.
- * 
+ *
  * @author Victoria Lacroix
  *
  */
 public abstract class Entity{
-    
+
     /**
      * Axis Coordinate
      */
     protected double            xpos, ypos;
     protected double            xposlast, yposlast;
-    
+
     /**
      * Axis Velocity
      */
     protected double            xvel, yvel;
-    
+
     /**
      * Axis Velocity Cap
      */
     protected double            xvelmax, yvelmax;
-    
+
     /**
      * Axis acceleration
      */
     protected double            xacc, yacc;
-    
+
     /**
      * Dimensions (Size)
      */
     protected int               width, height;
-    
+
     /**
      * Gravity for this entity.
      */
     protected double            gravity         = 9.8 / 60;
-    
+
     /**
      * Current graphic setting
      */
     protected Sprite            sprite;
-    
+
     /**
      * Character direction.
      *      0-Down
@@ -66,10 +66,10 @@ public abstract class Entity{
     private double              animCounter     = 0;
     private int                 step            = 0;
     private static final int    COUNTER_RESET   = 25;
-    
+
     /**
      * New abstract entity with SpriteSheet 'sheet'
-     * 
+     *
      * @param sheet
      */
     public Entity(int w, int h, SpriteSheet sheet){
@@ -81,9 +81,9 @@ public abstract class Entity{
         height = h;
         sprite = new Sprite(w, h, sheet);
     }
-    
+
     public abstract void update(double delta);
-    
+
     public int control(KeyStateManager input){
         if(input.isButtonDown(Button.DOWN) && !input.isButtonDown(Button.UP)){
             yvel = 1;
@@ -105,30 +105,30 @@ public abstract class Entity{
         }else{
             xvel = 0;
         }
-        
-        if(input.wasButtonPressed(Button.START)){
-            Window w = new Window(0, 0, 40, 6);
-            w.queue("This is text on a window. When it gets really fucking hot, it'll shut off before any damage is done. Probably.");
-            BaseEngine.focusTangible(w);
+
+        if(input.wasButtonPressed(Button.CANCEL)){
+            yvel = xvel = yacc = xacc = 0;
+            GUIEngine.addGUI(new Menu(0, 0, "Exit Menu", "Quit to Desktop"){});
         }
-        return -1;
+
+        return 0;
     }
-    
+
     /**
      * Collision detection/reaction method for tilemaps/collisionmaps.
-     * 
+     *
      * @param cmap
      *            CollisionMap to correspond to.
      */
     public void checkCollision(CollisionMap cmap){
         /*
          * Okay kid, this is where things get complicated.
-         * 
+         *
          * First of all, we have to use the x,y values for the next frame to
          * determine what the hell is going on, otherwise we'll get weird
          * "snapping" when an entity is consistently trying to move in a direction
          * (eg gravity).
-         * 
+         *
          * Next up, we manipulate WHERE the collision points on each side are
          * (an if statement represents one side). The result is an octagon shape
          * for the collision hitbox. The reasoning behind this is that a 4-point
@@ -136,7 +136,7 @@ public abstract class Entity{
          * Case in point, if the bottom left corner is activated, is the
          * character against a wall? Or leaning off a cliff? It leaves too much
          * ambiguity.
-         * 
+         *
          * Finally I wanted to address the math going on... because it's fucking
          * wild, and I try not to cuss much. Basically, when trying to find a
          * coordinate, one must first ask whether or not the axis corresponds to
@@ -147,13 +147,13 @@ public abstract class Entity{
          * box to prevent java's imperfect double-int conversion from detecting
          * the wrong block. Basically, it's an automated rounding. The final
          * resulting octagon is a little more inside of the entity than outside.
-         * 
+         *
          * Collision detection, in some cases, is still a little hoiky. This is
          * super-early beta stuff so you shouldn't, like, expect miracles.
          */
-        
+
         // First off, we look at grouped points representing the full collided side. This should take care of high-velocity collisions.
-        
+
         // Vertical collision (top/bottom)
         if(cmap.getAt(xpos + xvel + 4, ypos + yvel + height - 1)
                 && cmap.getAt(xpos + xvel + width - 1 - 4, ypos + yvel + height
@@ -170,9 +170,9 @@ public abstract class Entity{
                 ypos += height - (ypos % height);
                 yvel = (yvel < 0) ? 0 : yvel; // fix velocity if needed
             }
-            
+
         }
-        
+
         // horizontal collision (left/right)
         if((cmap.getAt((xpos) + xvel, (ypos) + yvel + 4) && cmap.getAt((xpos)
                 + xvel, (ypos) + yvel + (height - 1) - 4))){
@@ -188,9 +188,9 @@ public abstract class Entity{
             xpos -= xpos % width;
             xvel = (xvel > 0) ? 0 : xvel;
         }
-        
+
         // Here, we check weak collision (single points instead of grouped points). This take care of low-velocity collisions.
-        
+
         // Vertical collision (top/bottom)
         if(cmap.getAt(xpos + xvel + 4, ypos + yvel + height - 1)
                 || cmap.getAt(xpos + xvel + width - 1 - 4, ypos + yvel + height
@@ -206,7 +206,7 @@ public abstract class Entity{
             ypos += height - (ypos % height);
             yvel = (yvel < 0) ? 0 : yvel; // fix velocity if needed
         }
-        
+
         // horizontal collision (left/right)
         if((cmap.getAt((xpos) + xvel, (ypos) + yvel + 4) || cmap.getAt((xpos)
                 + xvel, (ypos) + yvel + (height - 1) - 4))){
@@ -223,10 +223,10 @@ public abstract class Entity{
             xvel = (xvel > 0) ? 0 : xvel;
         }
     }
-    
+
     /**
      * Calculate/Run anything that needs to be finalized.
-     * 
+     *
      * A note on the delta, all velocity values are roughly equal to what the entity will traverse in 1/60th of a second, in pixels.
      */
     public final void nextFrame(double delta){
@@ -247,14 +247,14 @@ public abstract class Entity{
         xpos += xvel * delta;
         ypos += yvel * delta;
     }
-    
+
     /**
      * Entity collision, to be implemented by subclass.
-     * 
+     *
      * @param other
      */
     public abstract void onCollide(Entity other);
-    
+
     public boolean isCollidedWith(Entity other){
         // step1
         if(xpos >= other.xpos && xpos < other.xpos + other.width
@@ -268,52 +268,52 @@ public abstract class Entity{
         }
         return false;
     }
-    
+
     public final double getX(){
         return xpos;
     }
-    
+
     public double getVelocityX(){
         return xvel;
     }
-    
+
     public final double getY(){
         return ypos;
     }
-    
+
     public final double getVelocityY(){
         return yvel;
     }
-    
+
     public int getWidth(){
         return width;
     }
-    
+
     public int getHeight(){
         return height;
     }
-    
+
     /**
      * Determines whether or not this entity should be removed from an active
      * list. I.E if its health is 0, etc.
-     * 
+     *
      * @return
      */
     public abstract boolean getGarbage();
-    
+
     /**
      * The sprite this entity is using
-     * 
+     *
      * @return
      */
     public Sprite getSprite(){
         return sprite;
     }
-    
+
     public final void draw(int sx, int sy, Screen s){
         sprite.draw(sx, sy, s);
     }
-    
+
     @Override
     public boolean equals(Object other){
         if(other instanceof Entity){
