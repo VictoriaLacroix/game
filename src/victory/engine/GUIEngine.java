@@ -50,7 +50,7 @@ public class GUIEngine{
     }
 
     public static void draw(int sx, int sy, Screen s){
-        for(int i = 0; i < Interfaces.size(); ++i){
+        for(int i = 0; i < size(); ++i){
             Interfaces.get(i).draw(sx, sy, s);
         }
     }

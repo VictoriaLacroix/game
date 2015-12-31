@@ -4,7 +4,7 @@ import net.victory.engine.Core;
 import net.victory.engine.GUIEngine;
 import net.victory.engine.GUI;
 import net.victory.engine.Menu;
-import net.victory.engine.Window;
+import net.victory.engine.DialogWindow;
 import net.victory.engine.graphics.Screen;
 import net.victory.engine.graphics.Sprite;
 import net.victory.engine.graphics.SpriteSheet;
@@ -108,7 +108,7 @@ public abstract class Entity{
 
         if(input.wasButtonPressed(Button.CANCEL)){
             yvel = xvel = yacc = xacc = 0;
-            GUIEngine.addGUI(new Menu(0, 0, "Exit Menu", "Quit to Desktop"){});
+            GUIEngine.addGUI(new Menu(0, 0, "Well", "Menus", "Work", "Now"));
         }
 
         return 0;
