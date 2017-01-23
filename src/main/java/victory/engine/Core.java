@@ -1,27 +1,25 @@
-package net.victory.engine;
+package victory.engine;
 
 import java.awt.BorderLayout;
 import java.awt.KeyboardFocusManager;
 
 import javax.swing.*;
 
-import net.victory.engine.graphics.Screen;
-import net.victory.engine.graphics.SpriteSheet;
-import net.victory.engine.input.KeyStateManager;
-import net.victory.engine.world.Map;
-import net.victory.engine.world.MapEngine;
-import net.victory.engine.world.Player;
+import victory.engine.graphics.Screen;
+import victory.engine.graphics.SpriteSheet;
+import victory.engine.gui.KeyStateManager;
+import victory.engine.gui.GUIEngine;
+import victory.engine.world.Map;
+import victory.engine.world.MapEngine;
+import victory.engine.world.Player;
 
-@SuppressWarnings("serial")
 /**
-
     Core class that performs the main logic in a game. It handles timing for
     graphics drawing, and calls various update() methods for different objects.
     It also handles windowing in the game.
     @author Victoria Lacroix
-
 */
-public class Core extends JPanel{
+public class Core extends JPanel {
 
     private Screen              screen;
 
@@ -37,7 +35,8 @@ public class Core extends JPanel{
     public Core(int w, int h, int s){
         setLayout(new BorderLayout());
         buttonManager = new KeyStateManager();
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(buttonManager);
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().
+            addKeyEventDispatcher(buttonManager);
         width = w;
         height = h;
         screen = new Screen(w, h, s);
@@ -45,7 +44,8 @@ public class Core extends JPanel{
 
         GUIEngine.init(w, h);
 
-        MapEngine world = new MapEngine(w, h, new Map(32, 32, new SpriteSheet("res/world.png"), "res/map/csv/world.csv"));
+        MapEngine world =
+            new MapEngine(w, h, new Map(32, 32, new SpriteSheet("world.png"), "map/csv/world.csv"));
         world.addEntity(new Player(128, 128));
         world.attachInput(0);
         GUIEngine.addGUI(world);
@@ -80,34 +80,23 @@ public class Core extends JPanel{
             delta = (now - lastTime) / nsPerTick;
             lastTime = now;
             rendersThisSecond++;
-            /*
-                What's being done here is that the delta value will be capped at
-                1 to prevent collision issues. If the game is rendering below
-                60fps, it will process multiple ticks before rendering again.
-                This also prevents collision failures when the game needs to
-                reload quickly from sleep. If the game renders above 60fps, then
-                it will just do a part of a tick, which means that movement
-                should be smoother. In other terms, the game's framerate is
-                essentially uncapped, and technically unfloored, but the
-                tickrate is floored at 60tps.
-             */
-            do{
+            do {
                 tick((delta >= 1d) ? 1d : delta);
                 delta--;
-            }while(delta > 0);
+            } while(delta > 0);
 
             draw();
 
-            try{
+            try {
                 Thread.sleep(2);
-            }catch(InterruptedException e){
+            } catch(InterruptedException e) {
                 // Exit if we can't thread
                 e.printStackTrace();
             }
 
             render();
 
-            if(System.currentTimeMillis() - tickTimer > 1000){
+            if(System.currentTimeMillis() - tickTimer > 1000) {
                 tickTimer += 1000;
                 System.err.println(rendersThisSecond + "fps");
                 rendersThisSecond = 0;
@@ -118,7 +107,7 @@ public class Core extends JPanel{
     /**
         Game logic method.
     */
-    protected void tick(double delta){
+    protected void tick(double delta) {
         GUIEngine.control(buttonManager);
         GUIEngine.update(delta);
         buttonManager.update();
@@ -127,14 +116,14 @@ public class Core extends JPanel{
     /**
         Graphics drawing method.
     */
-    protected void draw(){
+    protected void draw() {
         GUIEngine.draw(0, 0, screen);
     }
 
     /**
         Hardware render method.
     */
-    private void render(){
+    private void render() {
         screen.render();
     }
 
@@ -143,7 +132,7 @@ public class Core extends JPanel{
 
         @return this Core's Screen
      */
-    protected Screen getScreen(){
+    protected Screen getScreen() {
         return screen;
     }
 }

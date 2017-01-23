@@ -1,4 +1,4 @@
-package net.victory.engine.graphics;
+package victory.engine.graphics;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -17,8 +17,6 @@ public class SpriteSheet {
     private final int SHEET_HEIGHT;
     private int pixels[];
 
-    // public int indexSizeX;
-    // public int indexSizeY;
     /**
      * Creates SpriteSheet using the specified path.
      * 
@@ -29,10 +27,10 @@ public class SpriteSheet {
         BufferedImage image = null;
         try {
             image = ImageIO.read(new File(URL));
-        } catch (IOException e) {
+        } catch(IOException e) {
             e.printStackTrace();
         }
-        if (image == null) {
+        if(image == null) {
             SHEET_WIDTH = 0;
             SHEET_HEIGHT = 0;
             return;
@@ -45,8 +43,7 @@ public class SpriteSheet {
          * java built-ins, but with it we'll be able to directly pull out pixels
          * when we need them.
          */
-        pixels = image.getRGB(0, 0, image.getWidth(), image.getHeight(), null,
-                0, image.getWidth());
+        pixels = image.getRGB(0, 0, image.getWidth(), image.getHeight(), null, 0, image.getWidth());
     }
 
 
@@ -84,7 +81,7 @@ public class SpriteSheet {
     public int getPixel(int x, int y) {
         return pixels[x + (y * SHEET_WIDTH)];
     }
-    
+
     /**
      * Draws a section of the SpriteSheet on the Screen.
      * This is not the same as most draw()functions and requires the use of a Sprite class.
@@ -99,12 +96,12 @@ public class SpriteSheet {
      * @param s screen to draw to
      */
     public void draw(int x, int y, int ix, int iy, int iw, int ih, int m, Screen s){
-        if(ix < 0 || iy < 0){ return; }
-        for(int dy = 0; (int)Math.abs(dy) < (int)Math.abs(ih); ++dy){
-            for(int dx = 0; (int)Math.abs(dx) < (int)Math.abs(iw); ++dx){
-                if(ix + dx < 0 || iy + dy < 0){ break; }
-                if(ix + dx >= SHEET_WIDTH || iy + dy >= SHEET_HEIGHT){ break; }
-                if(pixels[(ix+dx) + ((iy + dy)*SHEET_WIDTH)] != m){
+        if(ix < 0 || iy < 0) { return; }
+        for(int dy = 0; (int)Math.abs(dy) < (int)Math.abs(ih); ++dy) {
+            for(int dx = 0; (int)Math.abs(dx) < (int)Math.abs(iw); ++dx) {
+                if(ix + dx < 0 || iy + dy < 0) { break; }
+                if(ix + dx >= SHEET_WIDTH || iy + dy >= SHEET_HEIGHT) { break; }
+                if(pixels[(ix+dx) + ((iy + dy)*SHEET_WIDTH)] != m) {
                     s.writePixel(x + dx, y + dy, pixels[(ix+dx) + ((iy + dy)*SHEET_WIDTH)]);
                 }
             }

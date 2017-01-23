@@ -1,4 +1,4 @@
-package net.victory.engine.world;
+package victory.engine.world;
 
 import java.io.File;
 import java.util.Scanner;
@@ -12,24 +12,24 @@ public class CollisionMap {
     public final int WIDTH, HEIGHT;
     public final int TILE_WIDTH, TILE_HEIGHT;
     boolean[] permissions;
-    
+
     /**
      * Blank constructor, allocates size.
      * @param w
      * @param h
      */
-    public CollisionMap(int w, int h){
+    public CollisionMap(int w, int h) {
         WIDTH = w; HEIGHT = h;
         TILE_WIDTH = 16;
         TILE_HEIGHT = 16;
         permissions = new boolean[WIDTH * HEIGHT];
     }
-    
+
     /**
      * Generates a new collisionmap using Map m
      * @param m
      */
-    public CollisionMap(Map m, String url){
+    public CollisionMap(Map m, String url) {
         WIDTH = m.getWidth();
         HEIGHT = m.getHeight();
         TILE_WIDTH = m.TILE_WIDTH;
@@ -37,27 +37,27 @@ public class CollisionMap {
         permissions = new boolean[WIDTH * HEIGHT];
         readPermissions(url);
     }
-    
+
     /**
      * Returns the permissions at a certain tile
      * @param x
      * @param y
      * @return
      */
-    public boolean getAt(int x, int y){
+    public boolean getAt(int x, int y) {
         return permissions[x + (y * WIDTH)];
     }
     public void setAt(int x, int y, boolean permission){
         permissions[x + (y * WIDTH)] = permission;
     }
-    
+
     /**
      * Returns permission at a double coordinate (entity coordinate)
      * @param x
      * @param y
      * @return
      */
-    public boolean getAt(double x, double y){
+    public boolean getAt(double x, double y) {
         x -= x % TILE_WIDTH;
         y -= y % TILE_HEIGHT;
         x /= TILE_WIDTH;

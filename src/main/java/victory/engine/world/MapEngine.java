@@ -1,11 +1,8 @@
-package net.victory.engine.world;
+package victory.engine.world;
 
-import net.victory.engine.GUI;
-import net.victory.engine.Window;
-import net.victory.engine.Menu;
-import net.victory.engine.battle.BattleScene;
-import net.victory.engine.graphics.Screen;
-import net.victory.engine.input.KeyStateManager;
+import victory.engine.gui.*;
+import victory.engine.battle.BattleScene;
+import victory.engine.graphics.Screen;
 
 /**
  * Map Engine that handles map logic and logic for the entities that inhabit it.
@@ -13,7 +10,7 @@ import net.victory.engine.input.KeyStateManager;
  * @author Victoria Lacroix
  *
  */
-public class MapEngine implements GUI{
+public class MapEngine implements GUI {
     public final int    TILE_WIDTH, TILE_HEIGHT;
     public final int    SCREEN_WIDTH, SCREEN_HEIGHT;
 
@@ -50,7 +47,7 @@ public class MapEngine implements GUI{
      */
     private Map         loadedMap;
 
-    public MapEngine(int screenWidth, int screenHeight, Map startmap){
+    public MapEngine(int screenWidth, int screenHeight, Map startmap) {
         SCREEN_WIDTH = screenWidth;
         SCREEN_HEIGHT = screenHeight;
 
@@ -63,7 +60,6 @@ public class MapEngine implements GUI{
 
         entities = new Entity[32];
 
-
         loadedMap = startmap;
     }
 
@@ -71,8 +67,8 @@ public class MapEngine implements GUI{
      * Adds entity e to the list.
      * @param e
      */
-    public void addEntity(Entity e){
-        if(manyEntities <= entities.length){
+    public void addEntity(Entity e) {
+        if(manyEntities <= entities.length) {
             int i;
             for(i = 0; entities[i] != null; i++);
             entities[i] = e;
@@ -80,7 +76,7 @@ public class MapEngine implements GUI{
             if(cameraman == null){
                 cameraman = e; // attaches camera if it is null.
             }
-        }else{
+        } else {
             System.err.println("Entites full in MapEngine.");
         }
     }
@@ -89,8 +85,8 @@ public class MapEngine implements GUI{
      * Removes at index.
      * @param i
      */
-    public void removeEntity(int i){
-        if(manyEntities > 0){
+    public void removeEntity(int i) {
+        if(manyEntities > 0) {
             entities[i] = entities[--manyEntities];
             entities[manyEntities] = null;
         }
@@ -100,7 +96,7 @@ public class MapEngine implements GUI{
      * Removes equating (note: bad method)
      * @param target
      */
-    public void removeEntity(Entity target){
+    public void removeEntity(Entity target) {
         int i;
         for(i = 0; !(target == entities[i]); i++);
         if(i == entities.length){
@@ -115,8 +111,8 @@ public class MapEngine implements GUI{
      * @param i
      *            entity at index i
      */
-    public void attachCamera(int i){
-        if(i >= 0 && i < manyEntities){
+    public void attachCamera(int i) {
+        if(i >= 0 && i < manyEntities) {
             cameraman = entities[i];
         }
     }
@@ -124,8 +120,8 @@ public class MapEngine implements GUI{
     /**
      * Attaches control of the game to this entity.
      */
-    public void attachInput(int i){
-        if(i >= 0 && i < manyEntities){
+    public void attachInput(int i) {
+        if(i >= 0 && i < manyEntities) {
             director = entities[i];
         }
     }
@@ -134,10 +130,10 @@ public class MapEngine implements GUI{
      * Updates the entities logic, then collision, and then algorithms (velocity
      * etc).
      */
-    public void update(double delta){
+    public void update(double delta) {
         // Logic, animation of entities.
-        for(int i = 0; i < entities.length; i++){
-            if(entities[i] != null){
+        for(int i = 0; i < entities.length; i++) {
+            if(entities[i] != null) {
                 entities[i].update(delta);
             }
         }
@@ -145,7 +141,7 @@ public class MapEngine implements GUI{
         handleCollision();
 
         // Physics update of entities
-        for(int i = 0; i < entities.length; i++){
+        for(int i = 0; i < entities.length; i++) {
             if(entities[i] != null){
                 entities[i].nextFrame(delta);
             }
@@ -156,11 +152,13 @@ public class MapEngine implements GUI{
         camY = (int)(cameraman.getY() - SCREEN_HEIGHT / 2 + cameraman.getHeight() / 2);
         //fix out-of-bounds
         camX = (camX < 0) ? 0 : camX;
-        camX = (camX + SCREEN_WIDTH > loadedMap.MAP_WIDTH * loadedMap.TILE_WIDTH) ? loadedMap.MAP_WIDTH * loadedMap.TILE_WIDTH - SCREEN_WIDTH : camX;
+        camX = (camX + SCREEN_WIDTH > loadedMap.MAP_WIDTH * loadedMap.TILE_WIDTH)
+                ? loadedMap.MAP_WIDTH * loadedMap.TILE_WIDTH - SCREEN_WIDTH : camX;
         camY = (camY < 0) ? 0 : camY;
-        camY = (camY + SCREEN_HEIGHT > loadedMap.MAP_HEIGHT * loadedMap.TILE_HEIGHT) ? loadedMap.MAP_HEIGHT * loadedMap.TILE_HEIGHT - SCREEN_HEIGHT : camY;
+        camY = (camY + SCREEN_HEIGHT > loadedMap.MAP_HEIGHT * loadedMap.TILE_HEIGHT)
+                ? loadedMap.MAP_HEIGHT * loadedMap.TILE_HEIGHT - SCREEN_HEIGHT : camY;
 
-        for(int i = 0; i < manyEntities; ++i){
+        for(int i = 0; i < manyEntities; ++i) {
             if(entities[i].getGarbage()){
                 removeEntity(i);
             };
@@ -168,7 +166,7 @@ public class MapEngine implements GUI{
 
         //Animate the loaded map if we've passed the animation counter.
         animCounter += delta;
-        if(animCounter >= COUNTER_RESET){
+        if(animCounter >= COUNTER_RESET) {
             animCounter -= COUNTER_RESET; //cycle again. We subtract by the reset to make animation smoother.
             loadedMap.animate();
         }
@@ -178,7 +176,7 @@ public class MapEngine implements GUI{
      * Update velocities for the entity in control.
      * @param buttonManager where to buttons from
      */
-    public int control(KeyStateManager buttonManager){
+    public int control(KeyStateManager buttonManager) {
         director.control(buttonManager);
         return 0;
     }
@@ -186,16 +184,16 @@ public class MapEngine implements GUI{
     /**
      * Handles the collision of all entities within eachother.
      */
-    public void handleCollision(){
-        for(int i = 0; i < entities.length; i++){
-            if(entities[i] != null){
+    public void handleCollision() {
+        for(int i = 0; i < entities.length; i++) {
+            if(entities[i] != null) {
                 entities[i].checkCollision(loadedMap.cmap);
             }
         }
-        for(int i = 0; i < manyEntities; ++i){
-            for(int j = 0; j < manyEntities; ++j){
-                if(i != j){
-                    if(entities[i].isCollidedWith(entities[j])){
+        for(int i = 0; i < manyEntities; ++i) {
+            for(int j = 0; j < manyEntities; ++j) {
+                if(i != j) {
+                    if(entities[i].isCollidedWith(entities[j])) {
                         entities[i].onCollide(entities[j]);
                     }
                 }
@@ -204,14 +202,14 @@ public class MapEngine implements GUI{
     }
 
     @Override
-    public void draw(int sx, int sy, Screen s){
+    public void draw(int sx, int sy, Screen s) {
         loadedMap.draw(-camX, -camY, s);
-        for(int i = 0; i < manyEntities; i++){
+        for(int i = 0; i < manyEntities; i++) {
             entities[i].draw((int)entities[i].getX() - camX, (int)entities[i].getY() - camY, s);
         }
 
         // Draw our director if they are an instance of ScreenController.
-        if(!(director instanceof Entity) && director instanceof GUI){
+        if(!(director instanceof Entity) && director instanceof GUI) {
             ((GUI)director).draw(0,0,s);
         }
     }

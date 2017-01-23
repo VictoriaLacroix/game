@@ -1,7 +1,6 @@
-package net.victory.engine.input;
+package victory.engine.gui;
 
-
-public interface InputController{
+public interface InputController {
     /**
      * Updates the object in relation to control.
      * @param k keystatemanager to read from.

@@ -1,12 +1,12 @@
-package net.victory.engine;
+package victory.engine.gui;
 
-import net.victory.engine.graphics.Screen;
-import net.victory.engine.graphics.Sprite;
-import net.victory.engine.graphics.SpriteSheet;
-import net.victory.engine.input.KeyStateManager;
-import net.victory.engine.input.KeyStateManager.Button;
+import victory.engine.graphics.Screen;
+import victory.engine.graphics.Sprite;
+import victory.engine.graphics.SpriteSheet;
+import victory.engine.gui.KeyStateManager;
+import victory.engine.gui.KeyStateManager.Button;
 
-public abstract class Window implements GUI{
+public abstract class Window implements GUI {
     private int x, y;
     private int width, height;
     /**
@@ -22,23 +22,23 @@ public abstract class Window implements GUI{
      * 0x21+ = ASCII text
      */
     private char[] win;
-    static SpriteSheet gfx = new SpriteSheet("res/text.png");
+    static SpriteSheet gfx = new SpriteSheet("text.png");
 
-    public Window(int sx, int sy, int w, int h){
+    public Window(int sx, int sy, int w, int h) {
         x = sx;
         y = sy;
         setSize(w, h);
     }
 
-    public int getWidth(){
+    public int getWidth() {
         return width;
     }
 
-    public int getHeight(){
+    public int getHeight() {
         return height;
     }
 
-    public char getAt(int wx, int wy){
+    public char getAt(int wx, int wy) {
         if(wx < 0 || wy < 0 || wx >= width || wy >= height) return 0x00;
         return win[(wy * width) + wx];
     }
@@ -48,7 +48,7 @@ public abstract class Window implements GUI{
      * @param w new width of the window
      * @param h new height of the window
      */
-    private void setSize(int w, int h){
+    private void setSize(int w, int h) {
         width = (w > 1) ? w: 2;
         height = (h > 1) ? h: 2;
         win = new char[width*height];
@@ -58,30 +58,30 @@ public abstract class Window implements GUI{
     /**
      * Set up a blank, bordered window.
      */
-    protected void setupBorders(){
-        for(int i = 0; i < width*height; ++i){
-            if(i < width){
-                if(i == 0){
+    protected void setupBorders() {
+        for(int i = 0; i < width*height; ++i) {
+            if(i < width) {
+                if(i == 0) {
                     win[i] = 0x10;  //Top Left
-                }else if(i < width -1){
+                } else if(i < width -1) {
                     win[i] = 0x11;  //Top
-                }else{
+                } else {
                     win[i] = 0x12;  //Top Right
                 }
-            }else if(i < width * (height-1)){
-                if(i % width == 0){
+            } else if(i < width * (height-1)) {
+                if(i % width == 0) {
                     win[i] = 0x13;  //Left
-                }else if(i % width < width-1){
+                } else if(i % width < width-1) {
                     win[i] = 0x20;  //Space
-                }else{
+                } else {
                     win[i] = 0x14;  //Right
                 }
-            }else{
-                if(i % width == 0){
+            } else {
+                if(i % width == 0) {
                     win[i] = 0x15;  //Bottom Left
-                }else if(i % width < width-1){
+                } else if(i % width < width-1) {
                     win[i] = 0x16;  //Bottom
-                }else{
+                } else {
                     win[i] = 0x17;  //Bottom Right
                 }
             }
@@ -92,7 +92,7 @@ public abstract class Window implements GUI{
      * Writes a string to this window.
      * @param s string to write.
      */
-    public void write(String s){
+    public void write(String s) {
         //Assumes the wanted string will be written in the top-left corner of the window.
         write(1, 1, s);
     }
@@ -103,15 +103,17 @@ public abstract class Window implements GUI{
      * @param y coord to start writing at.
      * @param s string to write.
      */
-    public void write(int x, int y, String s){
+    public void write(int x, int y, String s) {
         char str[] = s.toCharArray();
-        for(int i = 0; i < str.length; ++i){
-            if(str[i] == '\n' || x >= width-1){ x = 1; ++y; }
-            else{
+        for(int i = 0; i < str.length; ++i) {
+            if(str[i] == '\n' || x >= width - 1) {
+                x = 1; ++y;
+            } else {
                 win[x+(y*width)] = str[i];
                 ++x;
             }
-            if(y == height-1) return;
+
+            if(y == height - 1) return;
         }
     }
 
@@ -121,17 +123,17 @@ public abstract class Window implements GUI{
      * @param cy coord.
      * @param c char to write.
      */
-    public void put(int cx, int cy, char c){
-        if(cx >= 0 && cy >= 0 && cx < width && cy < height){
+    public void put(int cx, int cy, char c) {
+        if(cx >= 0 && cy >= 0 && cx < width && cy < height) {
             win[cx+(cy*width)] = c;
         }
     }
 
     @Override
-    public void draw(int sx, int sy, Screen s){
+    public void draw(int sx, int sy, Screen s) {
         Sprite brush = new Sprite(8, 8, gfx);
-        for(int dy = 0; dy < height; dy++){
-            for(int dx = 0; dx < width; dx++){
+        for(int dy = 0; dy < height; dy++) {
+            for(int dx = 0; dx < width; dx++) {
                 brush.setIndex(win[dx+(dy*width)]%0x10, win[dx+(dy*width)]/0x10);
                 brush.draw(dx*8 + x*8 + sx, dy*8 + y*8 + sx, s);
             }

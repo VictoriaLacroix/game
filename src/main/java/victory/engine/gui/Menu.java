@@ -1,15 +1,15 @@
-package net.victory.engine;
+package victory.engine.gui;
 
-import net.victory.engine.input.KeyStateManager;
-import net.victory.engine.input.KeyStateManager.Button;
-import net.victory.engine.graphics.Screen;
+import victory.engine.gui.KeyStateManager;
+import victory.engine.gui.KeyStateManager.Button;
+import victory.engine.graphics.Screen;
 
 /**
  * A menu for a videogame.
  * @author victoria
  *
  */
-public class Menu extends Window{
+public class Menu extends Window {
 
     private String[]    choices;
     private int         current;
@@ -21,10 +21,10 @@ public class Menu extends Window{
      * @param ny coord
      * @param s options
      */
-    public Menu(int nx, int ny, String... s){
+    public Menu(int nx, int ny, String... s) {
         super(nx, ny, maxLength(s)+3, s.length+2);
 
-        for(int i = 0; i < s.length; ++i){
+        for(int i = 0; i < s.length; ++i) {
             write(2, i+1, s[i]);
         }
 
@@ -32,16 +32,16 @@ public class Menu extends Window{
     }
 
     @Override
-    public int control(KeyStateManager k){
+    public int control(KeyStateManager k) {
         //selection logic
-        if(k.wasButtonPressed(Button.ACCEPT)){
+        if(k.wasButtonPressed(Button.ACCEPT)) {
             valid = true;
-        }else if(k.wasButtonPressed(Button.CANCEL)){
+        } else if(k.wasButtonPressed(Button.CANCEL)) {
             valid = true;
             current = 0;
-        }else if(k.wasButtonPressed(Button.UP)){
+        } else if(k.wasButtonPressed(Button.UP)) {
             --current;
-        }else if(k.wasButtonPressed(Button.DOWN)){
+        } else if(k.wasButtonPressed(Button.DOWN)) {
             ++current;
         }
 
@@ -50,18 +50,18 @@ public class Menu extends Window{
         if(current >= choices.length) current = 0;
 
         //Return logic
-        if(!valid){
+        if(!valid) {
             return 0;
-        }else{
+        } else {
             //fire(current);
             return current+1;
         }
     }
 
     @Override
-    public void update(double delta){
+    public void update(double delta) {
         // update cursor position
-        for(int i = 1; i <= choices.length; ++i){
+        for(int i = 1; i <= choices.length; ++i) {
             put(1, i, ' ');
         }
         put(1, current+1, (char)0x01);
@@ -72,7 +72,7 @@ public class Menu extends Window{
      * @param s array to sort through
      * @return the length of the longest string in the array.
      */
-    private static int maxLength(String[] s){
+    private static int maxLength(String[] s) {
         int res = 0;
         for(int i = 0; i < s.length; ++i) res = (s[i].length() > res) ? s[i].length(): res;
         return res;
@@ -81,7 +81,7 @@ public class Menu extends Window{
     /**
      * Called when the menu resolves. By default, does nothing but can be overridden in anonymous or sub-classes.
      */
-    private void fire(int choice){
+    private void fire(int choice) {
         return;
     }
 }

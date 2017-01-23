@@ -1,12 +1,12 @@
-package net.victory.engine.world;
+package victory.engine.world;
 
 import java.io.File;
 import java.util.Scanner;
 
-import net.victory.engine.graphics.Screen;
-import net.victory.engine.graphics.ScreenController;
-import net.victory.engine.graphics.Sprite;
-import net.victory.engine.graphics.SpriteSheet;
+import victory.engine.graphics.Screen;
+import victory.engine.graphics.ScreenController;
+import victory.engine.graphics.Sprite;
+import victory.engine.graphics.SpriteSheet;
 
 public class Map implements ScreenController {
     short[] tilemap; // data. This array is of shorts instead of bytes because
@@ -29,7 +29,7 @@ public class Map implements ScreenController {
         MAP_WIDTH = w;
         MAP_HEIGHT = h;
         TILE_WIDTH = TILE_HEIGHT = 16;
-        tileset = new SpriteSheet("res/tiles.png");
+        tileset = new SpriteSheet("tiles.png");
         tilemap = new short[w * h];
         generateMap();
         cmap = new CollisionMap(this, null);

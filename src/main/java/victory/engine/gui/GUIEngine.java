@@ -1,14 +1,14 @@
-package net.victory.engine;
+package victory.engine.gui;
 
 import java.util.Stack;
 
-import net.victory.engine.graphics.Screen;
-import net.victory.engine.input.KeyStateManager;
+import victory.engine.graphics.Screen;
+import victory.engine.gui.KeyStateManager;
 
 /**
     Effectively the game's GUI Manager.
 */
-public class GUIEngine{
+public class GUIEngine {
 
     /**
      * Screen Dimensions.
@@ -25,38 +25,38 @@ public class GUIEngine{
      */
     private static Stack<GUI> Interfaces;
 
-    public static void init(int w, int h){
+    public static void init(int w, int h) {
         screenWidth = w;
         screenHeight = h;
 
         Interfaces = new Stack<GUI>();
     }
 
-    public static void addGUI(GUI g){
+    public static void addGUI(GUI g) {
         Interfaces.push(g);
     }
 
-    public static int size(){
+    public static int size() {
         return Interfaces.size();
     }
 
-    public static void control(KeyStateManager k){
-        if(Interfaces.size() > 0){
+    public static void control(KeyStateManager k) {
+        if(Interfaces.size() > 0) {
             int res = Interfaces.peek().control(k);
-            if(res != 0){
+            if(res != 0) {
                 Interfaces.pop();
             }
         }
     }
 
-    public static void draw(int sx, int sy, Screen s){
-        for(int i = 0; i < size(); ++i){
+    public static void draw(int sx, int sy, Screen s) {
+        for(int i = 0; i < size(); ++i) {
             Interfaces.get(i).draw(sx, sy, s);
         }
     }
 
-    public static void update(double delta){
-        for(int i = 0; i < Interfaces.size(); ++i){
+    public static void update(double delta) {
+        for(int i = 0; i < Interfaces.size(); ++i) {
             Interfaces.get(i).update(delta);
         }
     }

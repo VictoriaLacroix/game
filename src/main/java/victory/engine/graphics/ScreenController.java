@@ -1,7 +1,7 @@
-package net.victory.engine.graphics;
+package victory.engine.graphics;
 
 
-public interface ScreenController{
+public interface ScreenController {
     /**
      * Draws this object on the given screen.
      * @param sx screen's x-coord to start drawing

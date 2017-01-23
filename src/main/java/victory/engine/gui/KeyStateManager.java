@@ -1,4 +1,4 @@
-package net.victory.engine.input;
+package victory.engine.gui;
 
 import java.awt.KeyEventDispatcher;
 import java.awt.event.KeyEvent;
@@ -13,7 +13,7 @@ import java.awt.event.KeyEvent;
  *
  * @author Victoria Lacroix
  */
-public class KeyStateManager implements KeyEventDispatcher{
+public class KeyStateManager implements KeyEventDispatcher {
     /**
      * Array of keys representing the state of keys as they are in the current frame.
      */
@@ -23,7 +23,7 @@ public class KeyStateManager implements KeyEventDispatcher{
      */
     private boolean keysLast[];
 
-    public KeyStateManager(){
+    public KeyStateManager() {
         keys = new boolean[KeyEvent.KEY_LAST + 1];
         keysLast = new boolean[KeyEvent.KEY_LAST + 1];
     }
@@ -32,8 +32,8 @@ public class KeyStateManager implements KeyEventDispatcher{
      * Moves the currently pressed keys into the "previous" keys. Useful for multi-frame input, such as checking for a
      * button's release before allowing another press of it.
      */
-    public void update(){
-        for(int i = 0; i < keys.length; i++){
+    public void update() {
+        for(int i = 0; i < keys.length; i++) {
             keysLast[i] = keys[i];
         }
     }
@@ -45,7 +45,7 @@ public class KeyStateManager implements KeyEventDispatcher{
      *            keyCode to check
      * @return whether the key was pressed.
      */
-    public boolean isPressed(int i){
+    public boolean isPressed(int i) {
         return (keys[i] && !keysLast[i]);
     }
 
@@ -56,7 +56,7 @@ public class KeyStateManager implements KeyEventDispatcher{
      *            keyCode to check
      * @return whether the key was released.
      */
-    public boolean isReleased(int i){
+    public boolean isReleased(int i) {
         return (keysLast[i] && !keys[i]);
     }
 
@@ -67,16 +67,16 @@ public class KeyStateManager implements KeyEventDispatcher{
      *            keyCode to check
      * @return whether the key is down.
      */
-    public boolean isDown(int i){
+    public boolean isDown(int i) {
         return keys[i];
     }
 
     // see button enum below that defines our keys.
-    public boolean isButtonDown(Button b){
+    public boolean isButtonDown(Button b) {
         return isDown(b.index);
     }
 
-    public boolean wasButtonPressed(Button b){
+    public boolean wasButtonPressed(Button b) {
         return isPressed(b.index);
     }
 
@@ -85,21 +85,21 @@ public class KeyStateManager implements KeyEventDispatcher{
      *
      * @author Victoria
      */
-    public static enum Button{
-        UP(KeyEvent.VK_UP),
-        DOWN(KeyEvent.VK_DOWN),
-        LEFT(KeyEvent.VK_LEFT),
-        RIGHT(KeyEvent.VK_RIGHT),
+    public static enum Button {
+        UP(KeyEvent.VK_W),
+        DOWN(KeyEvent.VK_S),
+        LEFT(KeyEvent.VK_A),
+        RIGHT(KeyEvent.VK_D),
         ACCEPT(KeyEvent.VK_SPACE),
         CANCEL(KeyEvent.VK_TAB);
 
         int index;
 
-        Button(int i){
+        Button(int i) {
             index = i;
         }
 
-        int get(){
+        int get() {
             return index;
         }
     }
@@ -109,15 +109,15 @@ public class KeyStateManager implements KeyEventDispatcher{
      * (keys) correspondingly.
      */
     @Override
-    public boolean dispatchKeyEvent(KeyEvent key){
-        if(key.getKeyCode() < keys.length){
-            if(key.getID() == KeyEvent.KEY_PRESSED){
+    public boolean dispatchKeyEvent(KeyEvent key) {
+        if(key.getKeyCode() < keys.length) {
+            if(key.getID() == KeyEvent.KEY_PRESSED) {
                 keys[key.getKeyCode()] = true;
-            }else if(key.getID() == KeyEvent.KEY_RELEASED){
+            } else if(key.getID() == KeyEvent.KEY_RELEASED) {
                 keys[key.getKeyCode()] = false;
             }
             return true; //the original method demands a boolean return so we'll just return true.
-        }else{
+        } else {
             return false;
         }
     }
