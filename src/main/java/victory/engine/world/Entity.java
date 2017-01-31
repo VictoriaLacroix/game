@@ -257,7 +257,7 @@ public abstract class Entity {
     public boolean equals(Object other) {
         if(other instanceof Entity){
             return ((Entity)other).xpos == xpos && ((Entity)other).ypos == ypos;
-        }else{
+        } else {
             return false;
         }
     }

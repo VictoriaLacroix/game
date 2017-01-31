@@ -1,0 +1,8 @@
+package victory.engine.world;
+
+public abstract class NPCEntity extends Entity {
+
+    public NPCEntity() {
+        super(16, 16, "null");
+    }
+}
